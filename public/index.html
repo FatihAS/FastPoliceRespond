@@ -1,0 +1,519 @@
+<!DOCTYPE HTML>
+
+<!--
+	Prologue by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Prologue by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		 <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqkrUlJZ0l7sC8BBmbxm_VQx4vkseKCpQ">
+    </script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+    <script src="http://malsup.github.com/jquery.form.js"></script> 
+    <script src="/socket.io/socket.io.js" type="text/javascript"></script>
+
+		<style type="text/css">
+.window {
+width: 94%;
+height: 90%;
+background: #fff;
+border-radius: 10px;
+position: relative;
+padding: 10px;
+
+box-shadow: 0 0 5px rgba(0,0,0,.4);
+text-align: left;
+margin: 3% auto;
+color:black;
+}
+
+.close-button {
+width: 3%;
+height: 6%;
+background: #C7514F;
+border-radius: 50%;
+border: 3px solid #fff;
+display: block;
+text-align: center;
+color: #fff;
+text-decoration: none;
+position: absolute;
+top: -10px;
+right: -10px;
+}
+
+#popup1 {
+width: 100%;
+height: 100%;
+position: fixed;
+background: rgba(0,0,0,.7);
+top: 0;
+left: 0;
+z-index: 9999;
+visibility: hidden;
+}
+
+#popup1:target {
+visibility: visible;
+}
+
+#popupmap {
+width: 100%;
+height: 100%;
+position: fixed;
+background: rgba(0,0,0,.7);
+top: 0;
+left: 0;
+z-index: 9999;
+visibility: hidden;
+}
+
+#popupmap:target {
+visibility: visible;
+}
+
+		</style>
+	</head>
+	<body>
+	<form id="ponyo_form" action="" onsubmit="percobaan1()">
+<input type="hidden" name="lat" value="24" />
+</form>
+
+		<!-- Header -->
+			<div id="header">
+
+				<div class="top">
+
+						<nav id="nav">
+
+							<ul>
+								<li><a href="<?= $this->config->base_url()?>" id="top-link" class="skel-layers-ignoreHref"><span class="icon fa-home">Home</span></a></li>
+								<li><a href="<?= $this->config->base_url()?>Welcome/map"  id="portfolio-link" class="skel-layers-ignoreHref"><span class="icon fa-th">Kos</span></a></li>
+								<li><a href="#mak" id="about-link" class="skel-layers-ignoreHref"><span class="icon fa-user">Makan</span></a></li>
+								<li><a href="#popup1" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Tambah Data</span></a></li>
+								<li><a href="#top" onclick="show_map()" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Show All Map</span></a></li>
+								<li><a href="<?= $this->config->base_url()?>/admin" id="contact-link" class="skel-layers-ignoreHref"><span class="icon fa-envelope">Login Admin</span></a></li>
+							</ul>
+						</nav>
+
+				</div>
+<div id="popup1">
+           <div class="window">
+               <a href="#" class="close-button" title="Close"></a>
+<form action="" method="post" accept-charset="utf-8">
+	Pilih Jenis Masukan : 
+	<select name="tipe">
+	<option value="kos" activated>Kos</option>
+	<option value="makan">Tempat Makan</option>
+	</select>
+	</br>
+	Nama : <input type"text" name="nama"><br/>
+	Info dan Alamat : <textarea name="alamat"></textarea></br>
+	No-HP : <input type"text" name="no-hp"><br/>
+	<input type="submit" value="kirim">
+</form>
+           </div>
+       </div>
+
+<div class="bottom">
+
+					<!-- Social Icons -->
+						<ul class="icons">
+							<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+							<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+							<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+							<li><a href="#" class="icon fa-envelope"><span class="label">Email</span></a></li>
+						</ul>
+
+				</div>
+
+			</div>
+
+		<!-- Main -->
+			<div id="main">
+
+					<section id="top" class="three">
+					<div id="map-canvas" style="height: 82%;
+width: 74%;
+position: absolute;
+background-color: #E5E3DF;
+overflow: hidden;
+margin-left: 2%;
+margin-top: -3%;"></div>
+<button id="show">show</button>
+
+
+					</section>
+
+
+				<!-- Contact -->
+					<section id="kos" class="four">
+
+					<header>
+								<h2>Tempat</h2>
+							</header>
+
+							
+
+					</section>
+
+			</div>
+
+		<!-- Footer -->
+			<div id="footer">
+
+				<!-- Copyright -->
+					<ul class="copyright">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+
+			</div>
+
+		<!-- Scripts -->
+		 <script type="text/javascript">
+        var current_user = null;        
+        var socket = io();
+        
+        function User(name) {
+            this.name = name;
+        }
+        
+        function createTextMessage(lat,lng,user) {
+            return { type: 'text', lat:lat,lng:lng,user:user};
+        }
+        
+        function createUserMessage(user) {
+            return { type: 'user', user: user };
+        }
+        
+        function addToList(id, value, clazz, distinct) {
+            var ul = document.getElementById(id);
+            if (distinct) {
+                if (indexOfList(id, value) > -1) {
+                    return;
+                }
+            }
+            var li = document.createElement('li');
+            if (clazz) li.className = clazz;
+            li.innerHTML = value;
+            ul.appendChild(li);
+        }
+        
+        function indexOfList(id, value) {
+            var ul = document.getElementById(id);
+            for (var i = 0; i < ul.children.length; ++i) {
+                if (ul.children[i].innerHTML === value) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        
+        function removeFromList(id, value) {
+            var ul = document.getElementById(id);
+            for (var i = 0; i < ul.children.length; ++i) {
+                if (ul.children[i].innerHTML === value) {
+                    ul.removeChild(ul.children[i]);
+                }
+            }
+        }
+        
+        if (!current_user) {
+            var text = prompt('Your username: ');
+            if (!text) {
+                window.location = '/';
+            }
+            current_user = new User(text);
+        }
+        
+        // kirim username ke server
+        socket.emit('message', createUserMessage(current_user));
+        
+        // kirim message ke server saat user menekan tombol Enter
+        // document.forms[0].messageText.onkeypress = function onKeyUp(evt) {
+        //     if (evt.keyCode == 13) {
+        //         socket.emit('message', createTextMessage(this.value, current_user));
+        //         this.value = null;
+        //         evt.preventDefault();
+        //     }            
+        // }
+
+
+
+
+        
+        // update list user yang sedang online
+        socket.on('connected', function(user) {
+            addToList('user-list',
+                      user.name,
+                      user.name == current_user.name ? 'current-user' : null,
+                      true);
+        });
+        
+        // update list saat user sudah tidak online
+        socket.on('disconnected', function(user) {
+            removeFromList('user-list', user.name);
+        });
+        
+        // handle message yang diterima dari server
+        // socket.on('message', function(message){
+            
+        //     if (message.type == 'text') {
+        //         addToList('messages', message.user.name + ': ' + message.text,
+        //                   message.user.name === current_user.name ? 'my-message' : null);
+        //     }    
+            
+        // });
+    </script>
+         <script type="text/javascript">
+
+     var a;
+     var b;
+
+           	var locations = [];
+           	var marker2 = [];
+           	var gmarkers = [];
+
+function submit()
+{
+$.ajax({
+                type: "POST", // data send format POST/GET
+                url: "", // file url for data processing 
+                data:  $("#ponyo_form").serialize(), // all form field are serialize  
+                dataType: "text", // response type xml, json, script, text, htm
+                success: function(data) {
+                    // alert('success');
+                }
+            });
+// document.getElementById("ponyo_form").submit();
+}
+
+      function initialize() {
+      	var a = [];
+
+      	socket.on('message', function(message){
+            
+      		var valid=1;
+      		var index;
+            if (message.type == 'text') {
+            	if(message.user.name==current_user.name)
+            	{
+            	}
+            	else
+            	{
+
+            	// alert("nama : "+message.user.name+"\nlat :"+message.lat+"\nlng :"+message.lng);
+            	// cekdata(message.user.name,message.lat,message.lng);
+
+            	var panjang=locations.length;
+
+            	if(panjang == 0)
+            	{
+            		
+            				      	locations = [
+				[message.user.name,message.lat,message.lng],
+];  
+
+valid=-1;
+            	}
+            	else
+            	{
+            	for (var i = 0; i < panjang;i++)
+            	{
+            		if(message.user.name == locations[i][0])
+            		{
+            			index=i;
+            			valid=0;
+            			break;
+            		}
+            	}
+            	}
+            	
+
+
+            	if(valid==0)	
+            	{
+            		
+            		locations[index]=[message.user.name,message.lat,message.lng];
+            	}
+            	else if(valid==1)
+            	{
+            		
+            		locations[panjang]=[message.user.name,message.lat,message.lng];
+            	}
+    
+
+    
+
+
+  //   var marker = new google.maps.Marker({
+  //     position: { lat: location[1] , lng: location[2] },
+  //     map: map,
+  //         animation: google.maps.Animation.DROP,
+  //          draggable: false,
+
+  // });
+
+                // addToList('messages', message.user.name + ': ' + message.text,message.user.name === current_user.name ? 'my-message' : null);
+            }    
+        }
+
+        });
+
+setInterval(function(){ 	        
+        setTimeout(function(){ 
+        	// marker2.setMap(null); 
+        	for(var i=0; i<gmarkers.length; i++){
+        gmarkers[i].setMap(null);
+    }
+
+
+        }, 900);
+	// marker2.setMap(null);
+
+
+		for (var i = 0; i < locations.length; i++) {
+			var location = locations [i];
+			if(location[0]==current_user.name)
+			{
+				alert("2");
+			}
+			else
+			{
+				
+        var marker2 = new google.maps.Marker({
+            position: new google.maps.LatLng (location[1], location[2]),
+            map: map,
+        });
+
+        gmarkers.push(marker2);
+    		}
+}
+
+}, 1000);
+
+      	function cekdata(name,lat,lng){
+
+// 		      	locations = [
+// 				['Fatih',-7.276372533142449,112.79113111586912],
+// ];      			
+// 		      	locations = [
+// 				[nama,lat,lng],
+// ];      			
+//       	locations = [
+// 				[current_user.name, -7.276372533142449,112.79113111586912],
+// ];
+
+for (i = 0; i < locations.length; i++) {  
+    marker2 = new google.maps.Marker({
+         position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+         map: map
+    });
+}
+
+}
+
+
+
+
+        var mapOptions = {
+          center: { lat: -7.2774025 , lng: 112.7953332},
+          zoom: 15
+        };
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+
+
+
+        var marker = new google.maps.Marker({
+      position: { lat: -7.276372533142449 , lng: 112.79113111586912 },
+      map: map,
+          animation: google.maps.Animation.DROP,
+           draggable: true,
+
+      title: 'Politeknik Elektronika Negeri Surabaya'
+  });
+
+
+// setInterval(function () {
+
+// 	setTimeout(function(){ marker2.setMap(null); }, 900);
+// 	cekdata();
+// 	// showdata();
+// 	locations.length=0;
+
+
+// }, 1000);
+
+ google.maps.event.addListener(marker, 'dragend', function(event) {
+ 	// alert( "Latitude: "+event.latLng.lat()+" "+", longitude: "+event.latLng.lng() );
+ 	// a = event.latLng.lat();
+ 	// b = event.latLng.lng();
+	document.getElementById("ponyo_form").elements.namedItem("lat").value=event.latLng.lat();
+	// document.getElementById("ponyo_form").elements.namedItem("lng").value=event.latLng.lng();
+ 	submit();
+ 	        	 socket.emit('message', createTextMessage(event.latLng.lat(),event.latLng.lng(),current_user));
+                this.value = null;
+                evt.preventDefault();
+                
+ 	
+  });
+
+
+
+
+
+
+      }
+
+     
+
+      function toggleBounce() {
+
+  if (marker.getAnimation() != null) {
+    marker.setAnimation(null);
+  } else {
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+  }
+
+}
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+
+
+		<script>
+
+		function show_map()
+		{
+			document.getElementById("popupmap").style.visibility="visible";
+		}
+		function close_map()
+		{
+			document.getElementById("popupmap").style.visibility="hidden";
+		}
+		function load_isi(n)
+{
+
+    document.getElementById("popup1").style.visibility="hidden";
+}
+		</script>
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollzer.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
